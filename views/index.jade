@@ -3,7 +3,8 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-
+  p
+    a(href=oauthUrl)  auth
   div#live
   div#views #{views}
   div#status
