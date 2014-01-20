@@ -8,4 +8,8 @@
     return $('#status').html('connected');
   });
 
+  socket.on('message', function(data) {
+    return console.log(data);
+  });
+
 }).call(this);

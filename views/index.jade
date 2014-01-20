@@ -5,6 +5,10 @@ block content
   p Welcome to #{title}
   p
     a(href=oauthUrl)  auth
+  form(action='subscribe')
+    input(type='text' placeholder='tag')
+    input(type='submit')
+
   div#live
   div#views #{views}
   div#status

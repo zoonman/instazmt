@@ -49,6 +49,10 @@ if ('development' == app.get('env')) {
 routes.setApp(app);
 
 app.get('/', routes.index);
+app.get('/subscribe', routes.tag_subscribe);
+app.get('/unsubscribe', routes.tag_unsubscribe);
+app.get('/realtime', routes.rt_handler);
+app.post('/realtime', routes.rt_handler);
 app.get('/users', user.list);
 app.get('/oauth', oauth.connect);
 
@@ -56,10 +60,13 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen( server);
 server.listen(app.get('port'), app.get('host'));
-
+;
 
 // handling for connection setup
 io.sockets.on('connection', function (socket) {
   console.log('application started')
   //console.dir(socket);
+
+  routes.setIO(socket);
+
 });

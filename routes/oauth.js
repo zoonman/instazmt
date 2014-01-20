@@ -41,7 +41,7 @@ exports.connect = function(req, res){
         'redirect_uri' : 'http://insta.zoonman.com/oauth'
       }))
       httpsReq.end();
-      res.send(req.param('code'));
+      // res.send(req.param('code'));
     }
   }
 };
