@@ -20,7 +20,7 @@ refresh_block = (msgdata) ->
   block.find('span.tags').html( msgdata.tags.join ', ')
   block.find('span.comments').html(msgdata.comments.data[msgdata.comments.count-1].text) if msgdata.comments.count > 0
   block.show(300)
-  if $('#live > div').length > 100
+  if $('#live > div').length > 1000
     $('#live > div:last').remove();
   0
 
@@ -29,7 +29,7 @@ socket.on('message', (msg) ->
 
   #image.src = msg.message.data[0].images.low_resolution.url
 
-  refresh_block data for data in msg.message.data when not  undefined
+  refresh_block data for data in msg.message.data
 
   # $('#live').append( image  )
 )

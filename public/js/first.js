@@ -25,7 +25,7 @@
       block.find('span.comments').html(msgdata.comments.data[msgdata.comments.count - 1].text);
     }
     block.show(300);
-    if ($('#live > div').length > 100) {
+    if ($('#live > div').length > 1000) {
       $('#live > div:last').remove();
     }
     return 0;
@@ -38,9 +38,7 @@
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       data = _ref[_i];
-      if (!void 0) {
-        _results.push(refresh_block(data));
-      }
+      _results.push(refresh_block(data));
     }
     return _results;
   });
