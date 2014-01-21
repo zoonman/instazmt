@@ -103,6 +103,18 @@ exports.tag_subscribe = function(req, res) {
   res.send('Subscribed. <a href="/">next</a>');
 }
 
+function getRecentTagData(tag) {
+  insta_request('GET', '/v1/tags/' + tag + '/media/recent?client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
+    console.log(data);
+
+    if (typeof _io !== 'undefined') {
+
+      _io.emit('message', {'message': data});
+      _io.broadcast.emit('message', {'message': data});
+    }
+  });
+}
+
 exports.tag_unsubscribe = function(req, res) {
 
 
@@ -121,27 +133,17 @@ exports.rt_handler = function(req, res) {
     console.log(req.body[0].object_id);
     console.log('//--');
 
-    if (typeof requestStack[req.body[0].object_id] === 'undefined') {
-      requestStack[req.body[0].object_id] = new Date();
-    }
+
 
     // throttling
+    if (typeof requestStack[req.body[0].object_id] === 'undefined') {
+      requestStack[req.body[0].object_id] = new Date();
+      getRecentTagData(req.body[0].object_id);
+    }
     if ( (new Date()) - requestStack[req.body[0].object_id] > 5000) {
-
+      getRecentTagData(req.body[0].object_id);
     }
 
-/*
-    var bodyObj = JSON.parse(req.body);
-    console.log(bodyObj); */
-    insta_request('GET', '/v1/tags/' + req.body[0].object_id + '/media/recent?client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
-          console.log(data);
-
-          if (typeof _io !== 'undefined') {
-
-            _io.emit('message', {'message': data});
-            _io.broadcast.emit('message', {'message': data});
-         }
-    });
     res.send('200 OK');
 
   }
