@@ -6,7 +6,7 @@ For real work you need to setup enviroment variables INSTAGRAM_CLIENT_ID & INSTA
 
 Type in shell
 
-export INSTAGRAM_CLIENT_ID=54uf8wht90youInstaramClientID
-export INSTAGRAM_CLIENT_SECRET=YourInstagramSecret
-node app.js
+    export INSTAGRAM_CLIENT_ID=54uf8wht90youInstaramClientID
+    export INSTAGRAM_CLIENT_SECRET=YourInstagramSecret
+    node app.js
 
