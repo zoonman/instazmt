@@ -1,0 +1,8 @@
+check process nodejs with pidfile /var/run/instazmt.pid
+alert monit@zoonman.com only on { timeout, nonexist }
+   start program = "/etc/init.d/instazmt start"
+   stop program  = "/etc/init.d/instazmt stop"
+   if 4 restarts within 20 cycles then timeout
+   if failed host insta.zoonman.com port 80 with protocol http with timeout 5 seconds for 4 times within 5 cycles then restart
+
+
