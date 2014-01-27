@@ -36,7 +36,7 @@ exports.index = function(req, res){
   }
 
 
-  res.render('index', { title: 'Express', 'views': req.session.views, 'oauthUrl' : oauthUrl });
+  res.render('index', { title: 'L!VE Instagram', 'views': req.session.views, 'oauthUrl' : oauthUrl });
 };
 
 function prepareCSRFtoken() {
@@ -67,8 +67,13 @@ function insta_request(method, endpoint, params, callback) {
         responseBody += chunk;
       });
       httpsRes.on('end', function() {
-        var responseObj = JSON.parse(responseBody);
-        callback(responseObj);
+        try {
+          var responseObj = JSON.parse(responseBody);
+          callback(responseObj);
+        } catch (e) {
+          console.log(e);
+        }
+
       });
 
   });
@@ -101,6 +106,17 @@ exports.tag_subscribe = function(req, res) {
   });
   // res.redirect('/');
   res.send('Subscribed. <a href="/">next</a>');
+}
+
+function getSubscriptions() {
+  insta_request('GET', '/v1/subscriptions?client_secret=' + process.env.INSTAGRAM_CLIENT_SECRET
+       +'&client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
+    console.log(data);
+
+    if (typeof _io !== 'undefined') {
+      _io.emit('subscriptions', {'message': data});
+    }
+  });
 }
 
 function getRecentTagData(tag) {

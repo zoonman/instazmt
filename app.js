@@ -24,6 +24,7 @@ app.set('host', process.env.HOST || "127.0.0.1");
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //
+app.set('title', 'L!VE Instagram');
 
 
 app.use(express.favicon());

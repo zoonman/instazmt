@@ -1,12 +1,52 @@
 extends layout
 
 block content
-  p #Boston Live Instagram
-    span /
-    span#views #{views}
-    span /
-    span#status
-    span /
-    a(href='https://twitter.com/marketmesuite') follow us
+  div.toolbar
+    div.title
+      <i class="fa fa-instagram"></i> Boston Live Instagram
+    div.stats
+      span /
+      span#views #{views}
+      span /
+      span#status
+      span /
+      a(href='https://twitter.com/marketmesuite') follow us
+    div.subscriptions
+      a(href='/subscribe')
+    div.user
+      div.data
 
   div#live
+
+  div.left-pane
+    div.photolist
+      div(ng-repeat="photo in photos | limitTo:quantity").photo.animate-repeat
+          img(ng-src="{{photo.images.thumbnail.url}}" ng-click="setCurrentPhoto(photo)")
+  div.right-pane(ng-show="currentPhoto.images")
+    div.image
+      div.image-cont
+        img(ng-src="{{currentPhoto.images.standard_resolution.url}}")
+        div.tags
+          span(ng-repeat="tag in currentPhoto.tags").
+             \#{{tag}},&nbsp;
+      div.user
+        a(ng-href="{{currentPhoto.link}}" target="_blank")
+          img(ng-src="{{currentPhoto.user.profile_picture}}")
+
+        div
+          a(ng-href="//instagram.com/{{currentPhoto.user.username}}" target="_blank") {{currentPhoto.user.full_name}}
+        div @{{currentPhoto.user.username}}
+        div.likes
+          i(class="fa fa-heart-o" ng-click="likeImage()")
+          {{currentPhoto.likes.count}}
+
+    div.comments
+      div.comment(ng-repeat="comment in currentPhoto.comments.data")
+        img(ng-src="{{comment.from.profile_picture}}")
+        div.text{{comment.text}}
+      div.leave
+        img
+        textarea
+
+
+
