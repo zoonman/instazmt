@@ -5,7 +5,7 @@
 
 var queryString = require('querystring');
 var mainApp;
-var requestStack = {};
+
 var _io;
 exports.setApp = function (app) {
   mainApp = app;
@@ -13,11 +13,22 @@ exports.setApp = function (app) {
 exports.setIO = function (new_io) {
   _io = new_io;
 }
+
+exports.requestStack = {};
+
 exports.index = function(req, res){
   if (req.session.views) {
     ++req.session.views;
   } else {
     req.session.views = 1;
+  }
+
+  if (typeof req.session.access_token === 'undefined') {
+    req.session.access_token = '';
+  }
+
+  if (typeof req.session.userInfo === 'undefined') {
+    req.session.userInfo = {};
   }
 
   var oauthUrl = '';
@@ -34,9 +45,9 @@ exports.index = function(req, res){
       'state' : 'someStateId'
     })
   }
+  console.log(req.session);
 
-
-  res.render('index', { title: 'L!VE Instagram', 'views': req.session.views, 'oauthUrl' : oauthUrl });
+  res.render('index', { title: 'L!VE Instagram', 'views': req.session.views, 'oauthUrl' : oauthUrl, 'sessionDetails': req.session });
 };
 
 function prepareCSRFtoken() {
@@ -71,6 +82,8 @@ function insta_request(method, endpoint, params, callback) {
           var responseObj = JSON.parse(responseBody);
           callback(responseObj);
         } catch (e) {
+          console.log('insta_request response');
+
           console.log(e);
         }
 
@@ -97,20 +110,26 @@ exports.tag_subscribe = function(req, res) {
   insta_request('POST', '/v1/subscriptions/',{
     'client_id' : process.env.INSTAGRAM_CLIENT_ID,
     'client_secret' : process.env.INSTAGRAM_CLIENT_SECRET,
-    'object' : 'tag','aspect' : 'media',
+    'object' : 'tag',
+    'aspect' : 'media',
     'object_id' : req.param('tag'),
     'verify_token' : 'myVerifyToken02'+prepareCSRFtoken() ,
     'callback_url' : 'http://insta.zoonman.com/realtime'
   }, function (data) {
+    console.log('tag_subscribe');
     console.log(data);
+    res.redirect('/');
+
   });
   // res.redirect('/');
-  res.send('Subscribed. <a href="/">next</a>');
+  // res.send('Subscribed. <a href="/">next</a>');
+  getSubscriptions();
 }
 
 function getSubscriptions() {
   insta_request('GET', '/v1/subscriptions?client_secret=' + process.env.INSTAGRAM_CLIENT_SECRET
        +'&client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
+    console.log('getSubscriptions');
     console.log(data);
 
     if (typeof _io !== 'undefined') {
@@ -121,6 +140,7 @@ function getSubscriptions() {
 
 function getRecentTagData(tag) {
   insta_request('GET', '/v1/tags/' + tag + '/media/recent?client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
+    console.log('getRecentTagData');
     console.log(data);
 
     if (typeof _io !== 'undefined') {
@@ -132,8 +152,20 @@ function getRecentTagData(tag) {
 }
 
 exports.tag_unsubscribe = function(req, res) {
+  insta_request('DELETE', '/v1/subscriptions/',{
+    'client_id' : process.env.INSTAGRAM_CLIENT_ID,
+    'client_secret' : process.env.INSTAGRAM_CLIENT_SECRET,
+    'object' : 'tag',
+    'aspect' : 'media',
+    'object_id' : req.param('tag'),
+    'verify_token' : 'myVerifyToken02'+prepareCSRFtoken() ,
+    'callback_url' : 'http://insta.zoonman.com/realtime'
+  }, function (data) {
+    console.log('tag_unsubscribe');
+    console.log(data);
+    res.redirect('/');
 
-
+  });
 }
 
 exports.rt_handler = function(req, res) {
@@ -145,19 +177,31 @@ exports.rt_handler = function(req, res) {
     res.send(req.param('hub.challenge'));
   }
   else {
-    console.log('--//');
-    console.log(req.body[0].object_id);
-    console.log('//--');
+    //console.log('--//');
+    //console.log(req.body[0].object_id);
+    //console.log('//--');
 
 
-
-    // throttling
-    if (typeof requestStack[req.body[0].object_id] === 'undefined') {
-      requestStack[req.body[0].object_id] = new Date();
-      getRecentTagData(req.body[0].object_id);
+    var objectHash = 'default';
+    if (typeof  req.body[0] !== 'undefined'
+        && typeof  req.body[0].object_id !== 'undefined') {
+      objectHash = req.body[0].object_id;
     }
-    if ( (new Date()) - requestStack[req.body[0].object_id] > 5000) {
-      getRecentTagData(req.body[0].object_id);
+    // throttling
+    if (typeof exports.requestStack[objectHash] === 'undefined') {
+      var dt = new Date();
+      exports.requestStack[objectHash] = Date.now();
+      //getRecentTagData(objectHash);
+    }
+    //console.log(exports.requestStack[objectHash]);
+    //console.log(Date.now());
+    if (  Date.now() -  exports.requestStack[objectHash] > 5000) {
+      ///getRecentTagData(objectHash);
+      exports.requestStack[objectHash] = Date.now();
+      console.log('getting...');
+
+    } else {
+      console.log('trottling...');
     }
 
     res.send('200 OK');

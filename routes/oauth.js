@@ -4,7 +4,10 @@
 
 var queryString = require('querystring');
 
-exports.connect = function(req, res){
+exports.connect = function(req, res, next){
+  console.log('exports.connect  console.log(req.session');
+  console.log(req.session);
+  var req1 = req;
   if (req.session.access_token) {
     // check for actions
   } else {
@@ -23,11 +26,16 @@ exports.connect = function(req, res){
       var httpsReq = https.request(options, function(httpsRes) {
         console.log("statusCode: ", httpsRes.statusCode);
         console.log("headers: ", httpsRes.headers);
-
         httpsRes.on('data', function(d) {
-          process.stdout.write(d);
+          // process.stdout.write(d);
           var responseObj = JSON.parse(d);
+          req1.session.zyxxx = 'blah1';
           req.session.access_token = responseObj.access_token;
+          req.session.userInfo = responseObj.user;
+
+          console.log('Getting access token');
+          console.log(req.session);
+          next();
         });
       });
       httpsReq.on('error', function(e) {
@@ -41,7 +49,16 @@ exports.connect = function(req, res){
         'redirect_uri' : 'http://insta.zoonman.com/oauth'
       }))
       httpsReq.end();
-      // res.send(req.param('code'));
+
+      //res.redirect('/');
+    }
+    else {
+      res.redirect('/?error=noOAuthCode');
     }
   }
 };
+
+exports.say = function(req, res, next){
+  // res.send(req.param('code'));
+  res.redirect('/');
+}

@@ -1,20 +1,7 @@
 extends layout
 
 block content
-  div.toolbar
-    div.title
-      <i class="fa fa-instagram"></i> Boston Live Instagram
-    div.stats
-      span /
-      span#views #{views}
-      span /
-      span#status
-      span /
-      a(href='https://twitter.com/marketmesuite') follow us
-    div.subscriptions
-      a(href='/subscribe')
-    div.user
-      div.data
+
 
   div#live
 
@@ -38,15 +25,17 @@ block content
         div @{{currentPhoto.user.username}}
         div.likes
           i(class="fa fa-heart-o" ng-click="likeImage()")
-          {{currentPhoto.likes.count}}
+           {{currentPhoto.likes.count}}
 
     div.comments
       div.comment(ng-repeat="comment in currentPhoto.comments.data")
         img(ng-src="{{comment.from.profile_picture}}")
-        div.text{{comment.text}}
+        div.text {{comment.text}}
       div.leave
         img
         textarea
 
 
+
+- sessionDetails.stringify()
 

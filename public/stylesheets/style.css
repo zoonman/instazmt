@@ -139,6 +139,7 @@ div.user  img  {
 }
 
 .toolbar div {float: left}
+.toolbar div.user {float: right}
 
 
 .animate-repeat.ng-move,
