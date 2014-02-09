@@ -5,17 +5,7 @@
 var instaApp = angular.module('instaApp', []);
 
 instaApp.controller('instaCtrl', function ($scope) {
-  $scope.photos = [{
-      id: "641626190680971481_1018917069",
-      link: 'http://test.com/',
-      images: {
-        thumbnail: {
-          height: 150,
-          url: "http://distilleryimage11.s3.amazonaws.com/0d143cbe863c11e3916c120c289588fb_5.jpg",
-          width: 150
-        }
-      }
-    }
+  $scope.photos = [
   ];
 
   $scope.subscriptions = [];
@@ -29,8 +19,8 @@ instaApp.controller('instaCtrl', function ($scope) {
 
   var socket = io.connect();
   socket.on('message', function(msg) {
-    var data, _i, _len, _ref, _updated = false;
-    console.log(msg);
+    var data, _i, _len, _ref, _updated = false, _delay=1;
+    //console.log(msg);
     _ref = msg.message.data;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       data = _ref[_i];
@@ -43,15 +33,15 @@ instaApp.controller('instaCtrl', function ($scope) {
       });
 
       if (!_updated) {
-        $scope.photos.unshift(data);
-        // console.dir($scope.photos);
+          $scope.photos.unshift(data);
       }
     }
     $scope.$apply();
+
   });
 
   socket.on('subscriptions', function (msg) {
-    console.log(msg);
+    //console.log(msg);
   });
 
 });

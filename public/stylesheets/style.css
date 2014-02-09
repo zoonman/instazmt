@@ -50,6 +50,7 @@ div#live div    span.comments    {top: 250px;
     height: 150px;
     float: left;
     margin: 3px;
+    cursor: pointer;
 }
 
 .right-pane .image-cont {
@@ -80,6 +81,13 @@ div#live div    span.comments    {top: 250px;
 .right-pane .image .user div.likes  {
     width: 50px;
 }
+
+.right-pane .image .user div.caption  {
+    color: #777777;
+    font-style: italic;
+    width: 600px;
+}
+
 .comments .leave  {
     clear: both;
 }
@@ -116,7 +124,7 @@ div#live div    span.comments    {top: 250px;
     width: 550px;
     overflow: hidden;
 }
-div.user {
+.image div.user {
     clear: both;
     height: 30px;
     margin-top: 5px;

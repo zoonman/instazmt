@@ -140,8 +140,8 @@ function getSubscriptions() {
 
 function getRecentTagData(tag) {
   insta_request('GET', '/v1/tags/' + tag + '/media/recent?client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
-    console.log('getRecentTagData');
-    console.log(data);
+    console.log('getRecentTagData: '+tag);
+    // console.log(data);
 
     if (typeof _io !== 'undefined') {
 
@@ -191,17 +191,17 @@ exports.rt_handler = function(req, res) {
     if (typeof exports.requestStack[objectHash] === 'undefined') {
       var dt = new Date();
       exports.requestStack[objectHash] = Date.now();
-      //getRecentTagData(objectHash);
+      getRecentTagData(objectHash);
     }
     //console.log(exports.requestStack[objectHash]);
     //console.log(Date.now());
     if (  Date.now() -  exports.requestStack[objectHash] > 5000) {
-      ///getRecentTagData(objectHash);
+      getRecentTagData(objectHash);
       exports.requestStack[objectHash] = Date.now();
       console.log('getting...');
 
     } else {
-      console.log('trottling...');
+      console.log('trottling... ' + objectHash);
     }
 
     res.send('200 OK');

@@ -9,6 +9,7 @@ block content
     div.photolist
       div(ng-repeat="photo in photos | limitTo:quantity").photo.animate-repeat
           img(ng-src="{{photo.images.thumbnail.url}}" ng-click="setCurrentPhoto(photo)")
+      p Wait a little, photos are coming...
   div.right-pane(ng-show="currentPhoto.images")
     div.image
       div.image-cont
@@ -24,8 +25,10 @@ block content
           a(ng-href="//instagram.com/{{currentPhoto.user.username}}" target="_blank") {{currentPhoto.user.full_name}}
         div @{{currentPhoto.user.username}}
         div.likes
-          i(class="fa fa-heart-o" ng-click="likeImage()")
+          i(class="fa fa-heart-o" ng-click="likeImage()") &nbsp;
            {{currentPhoto.likes.count}}
+        div.caption
+           {{currentPhoto.caption.text}}
 
     div.comments
       div.comment(ng-repeat="comment in currentPhoto.comments.data")
@@ -33,7 +36,7 @@ block content
         div.text {{comment.text}}
       div.leave
         img
-        textarea
+        textarea(placeholder='is not done yet...')
 
 
 

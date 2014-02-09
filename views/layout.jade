@@ -2,6 +2,7 @@ doctype html
 html(data-ng-app="instaApp")
   head
     title= title
+    meta(name='description', content='Sochi2014 - live photostream from Instagram')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css')
     script(src="//code.jquery.com/jquery-1.10.2.min.js")
@@ -21,14 +22,14 @@ html(data-ng-app="instaApp")
   body(ng-controller="instaCtrl")
     div.toolbar
       div.title
-        <i class="fa fa-instagram"></i> Boston Live Instagram
+        <i class="fa fa-instagram"></i> Live Photos from Instagram - Sochi 2014!
       div.stats
         span /
         span#views #{views}
         span /
         span#status
         span /
-        a(href='https://twitter.com/marketmesuite') follow us
+        a(href='https://www.facebook.com/sharer/sharer.php?u=http://mrkt.ms/8uZ') Share
       div.subscriptions
         a(href='/subscribe')
       div.user
