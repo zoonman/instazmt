@@ -25,7 +25,7 @@ block content
           a(ng-href="//instagram.com/{{currentPhoto.user.username}}" target="_blank") {{currentPhoto.user.full_name}}
         div @{{currentPhoto.user.username}}
         div.likes
-          i(class="fa fa-heart-o" ng-click="likeImage()") &nbsp;
+          i(class="fa fa-heart-o" ng-click="likePhoto(currentPhoto)") &nbsp;
            {{currentPhoto.likes.count}}
         div.caption
            {{currentPhoto.caption.text}}
@@ -36,7 +36,7 @@ block content
         div.text {{comment.text}}
       div.leave
         img
-        textarea(placeholder='is not done yet...')
+        textarea#commentText(placeholder='is not done yet...') {{currentCommentText}}
 
 
 

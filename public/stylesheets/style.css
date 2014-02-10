@@ -135,7 +135,7 @@ div.user  img  {
     height: 25px;
 }
 
-.toolbar { background: none repeat scroll 0 0 rgba(0, 0, 0, 0.8);
+.toolbar { background: none repeat scroll 0 0 rgba(50, 50, 50, 0.8);
     box-shadow: 0 1px 3px #000000;
     left: 0;
     position: fixed;
@@ -146,8 +146,13 @@ div.user  img  {
     z-index: 100;
 }
 
-.toolbar div {float: left}
-.toolbar div.user {float: right}
+.toolbar div {float: left;padding-right: 4px;padding-top: 2px;padding-left: 4px;}
+.toolbar div.user {float: right;}
+.toolbar div.user img {height: 18px;
+    margin-top: 0px;
+    padding: 0 4px 0 1px;
+    vertical-align: text-bottom;
+    width: 18px;}
 
 
 .animate-repeat.ng-move,

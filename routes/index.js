@@ -10,13 +10,33 @@ var _io;
 exports.setApp = function (app) {
   mainApp = app;
 }
-exports.setIO = function (new_io) {
+
+exports.setIO = function (new_io, session) {
   _io = new_io;
+
+  _io.on('like', function(data) {
+    console.log('LIKE:');
+    console.log(data);
+    console.log(_io);
+    /*
+    insta_request('POST', '/v1/media/'+data.id+'/likes/',{
+      'access_token': req.session.access_token
+    }, function (data) {
+      console.log('like');
+      console.log(data);
+    });*/
+  });
+  _io.on('comment', function(data) {
+    //
+  });
+
 }
 
 exports.requestStack = {};
 
 exports.index = function(req, res){
+  //console.log(req);
+
   if (req.session.views) {
     ++req.session.views;
   } else {
@@ -146,6 +166,10 @@ function getRecentTagData(tag) {
     if (typeof _io !== 'undefined') {
 
       _io.emit('message', {'message': data});
+      /*
+      if (typeof  req.session.userInfo === "object") {
+        _io.emit('currentUserData', req.session.userInfo);
+      }*/
       _io.broadcast.emit('message', {'message': data});
     }
   });
@@ -212,5 +236,7 @@ exports.rt_handler = function(req, res) {
     // _io.emit('message', {'message':req.body});
   }
 }
+
+
 
 
