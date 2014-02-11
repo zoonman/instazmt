@@ -35,8 +35,9 @@ block content
         img(ng-src="{{comment.from.profile_picture}}")
         div.text {{comment.text}}
       div.leave
-        img
-        textarea#commentText(placeholder='is not done yet...') {{currentCommentText}}
+        form(ng-submit="sendComment()")
+          img
+          textarea#commentText(placeholder='is not done yet' ng-model="currentCommentText" ng-keyup="$event.keyCode == 13 ? sendComment() : null")
 
 
 

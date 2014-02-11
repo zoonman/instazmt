@@ -11,23 +11,30 @@ exports.setApp = function (app) {
   mainApp = app;
 }
 
-exports.setIO = function (new_io, session) {
+exports.setIO = function (new_io, session_io) {
   _io = new_io;
 
   _io.on('like', function(data) {
     console.log('LIKE:');
     console.log(data);
-    console.log(_io);
-    /*
-    insta_request('POST', '/v1/media/'+data.id+'/likes/',{
-      'access_token': req.session.access_token
-    }, function (data) {
+    insta_request('POST', '/v1/media/'+data.mediaId+'/likes/',{
+      'access_token': session_io.access_token
+    }, function (result) {
       console.log('like');
-      console.log(data);
-    });*/
+      console.log(result);
+    });
   });
+
   _io.on('comment', function(data) {
     //
+    insta_request('POST', '/v1/media/'+data.mediaId+'/comments/',{
+      'access_token': session_io.access_token,
+      'text': data.text
+    }, function (result) {
+      console.log('comment');
+      console.log(result);
+    });
+
   });
 
 }
@@ -89,8 +96,8 @@ function insta_request(method, endpoint, params, callback) {
   };
 
   var httpsReq = https.request(options, function(httpsRes) {
-    console.log("statusCode: ", httpsRes.statusCode);
-    console.log("headers: ", httpsRes.headers);
+    //console.log("statusCode: ", httpsRes.statusCode);
+    //console.log("headers: ", httpsRes.headers);
 
 
       var responseBody = '';
@@ -137,7 +144,7 @@ exports.tag_subscribe = function(req, res) {
     'callback_url' : 'http://insta.zoonman.com/realtime'
   }, function (data) {
     console.log('tag_subscribe');
-    console.log(data);
+    //console.log(data);
     res.redirect('/');
 
   });
@@ -150,7 +157,7 @@ function getSubscriptions() {
   insta_request('GET', '/v1/subscriptions?client_secret=' + process.env.INSTAGRAM_CLIENT_SECRET
        +'&client_id=' + process.env.INSTAGRAM_CLIENT_ID, null , function (data) {
     console.log('getSubscriptions');
-    console.log(data);
+    //console.log(data);
 
     if (typeof _io !== 'undefined') {
       _io.emit('subscriptions', {'message': data});
@@ -186,7 +193,7 @@ exports.tag_unsubscribe = function(req, res) {
     'callback_url' : 'http://insta.zoonman.com/realtime'
   }, function (data) {
     console.log('tag_unsubscribe');
-    console.log(data);
+    //console.log(data);
     res.redirect('/');
 
   });

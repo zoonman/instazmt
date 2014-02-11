@@ -27,13 +27,11 @@ instaApp.controller('instaCtrl', function ($scope) {
     console.log(photo);
     socket.emit("like",{mediaId: photo.id, accessToken: $scope.currentUserData.access_token});
     $scope.currentPhoto.likes.count += 1;
-    // $scope.$apply();
   }
-  $scope.sendComment = function(photo) {
-    console.log(photo);
-    socket.emit("comment",{mediaId: photo.id, text: $scope.currentCommentText });
-    // $scope.currentPhoto.comments
-    $scope.$apply();
+  $scope.sendComment = function() {
+    console.log($scope.currentPhoto);
+    console.log($scope.currentCommentText);
+    socket.emit("comment",{mediaId: $scope.currentPhoto.id, 'text': $scope.currentCommentText });
   }
 
 

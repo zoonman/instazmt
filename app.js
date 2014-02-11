@@ -13,7 +13,7 @@ var http = require('http');
 var path = require('path');
 var requestStack = {};
 var appSessionSecret = 'woof-woof';
-
+var cookieParser = express.cookieParser(appSessionSecret);
 
 
 var memcachedStorage = require('connect-memcached')(express);
@@ -29,10 +29,9 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('zmNDJSession'));
+app.use(cookieParser);
 app.use(express.session({
   secret: appSessionSecret,
-  key: 'connect.sid',
   store: sessionStore = new memcachedStorage({
     hosts:['127.0.0.1:11211']
   })
@@ -65,23 +64,12 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen( server);
 server.listen(app.get('port'), app.get('host'));
-var connect = require('connect');
+
+var SessionSockets = require('session.socket.io'),
+    sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+
 // handling for connection setup
-io.sockets.on('connection', function (socket) {
+sessionSockets.on('connection', function (err, socket, session) {
   console.log('application started')
-  //console.dir(socket);
-  //var cookie_string = socket.request.headers.cookie;
-  //var parsed_cookies = connect.utils.parseCookie(cookie_string);
-  //var connect_sid = parsed_cookies['connect.sid'];
-  //if (connect_sid) {
-    //sessionStore.get(connect_sid, function (error, session) {
-      //
-      routes.setIO(socket);
-
-
-    //});
-  //}
-
-
-
+  routes.setIO(socket, session);
 });
