@@ -17,3 +17,7 @@ AngularJS is used for frontend rendering.
 Install dependencies by running command
 
     npm install
+
+Run app.
+
+Done!
