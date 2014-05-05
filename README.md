@@ -21,6 +21,6 @@ Now you can run the app
 
     node app.js
 
-Done!
+Done! Open http://localhost:3001/
 
 [![Build Status](https://travis-ci.org/zoonman/instazmt.svg?branch=master)](https://travis-ci.org/zoonman/instazmt)
