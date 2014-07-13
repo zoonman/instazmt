@@ -22,7 +22,7 @@ html(data-ng-app="instaApp")
   body(ng-controller="instaCtrl")
     div.toolbar
       div.title
-        <i class="fa fa-instagram"></i> Live Photos from Instagram - Sochi 2014!
+        <i class="fa fa-instagram"></i> Live Photos from Instagram!
       div.stats
         span /
         span#views #{views}
@@ -31,7 +31,7 @@ html(data-ng-app="instaApp")
         span /
         a(href='https://www.facebook.com/sharer/sharer.php?u=http://mrkt.ms/8uZ') Share
       div.subscriptions
-        a(href='/subscribe')
+        a(href='/subscribe') Subscribe to a tag
       div.user
         div.data
           - if (typeof sessionDetails['userInfo']['username'] !== 'undefined') {
